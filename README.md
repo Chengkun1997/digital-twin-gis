@@ -60,6 +60,11 @@ Vite 使用相对路径 `base: './'`，因此支持部署在子目录下，无�
 （即 `./cesium/`），两者都以文档 URL 为基准解析，因此在 `/digital-twin-gis/` 子路径下
 Cesium 的 `Workers/`、`Assets/`、`Widgets/` 与 `data/*.json` 都能正确命中，不走 404。
 
+线上实测（无头 Chrome 打开线上地址，非仅看 Actions 状态）：北京 4 个专题就绪 / 220,100 要素，
+点击上海后 8 个专题 / 456,418 要素渲染完成，**页面请求失败数 0、控制台错误 0**。
+
+![线上站点](screenshots/06-online-pages.png)
+
 GitHub Pages 限制（与本项目对照）：单个发布站点 ≤ 1 GB、单文件 ≤ 100 MB。本项目 `dist/` 共 159.7 MB，
 最大单文件 `guangdong-landuse.json` 18.7 MB，均在限制内。
 
