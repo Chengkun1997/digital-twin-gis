@@ -1,0 +1,31 @@
+# 依赖
+node_modules/
+
+# 构建产物（可由 npm run build 重新生成，且 dist/data 与 public/data 重复）
+dist/
+dist-ssr/
+
+# 原始与生成数据（体积大，可由 npm run fetch / npm run data 重新生成）
+data/pbf/
+public/data/*
+!public/data/.gitkeep
+
+# 日志
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# 本地环境变量
+.env
+.env.*
+!.env.example
+
+# 编辑器 / 系统临时文件
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+desktop.ini

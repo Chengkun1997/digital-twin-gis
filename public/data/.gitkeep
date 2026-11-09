@@ -1,0 +1,2 @@
+# 本目录存放 npm run data 生成的省级矢量数据（.gitignore 已排除 *.json）
+# 执行 npm run fetch && npm run data 后才会生成 manifest.json 与各省数据文件

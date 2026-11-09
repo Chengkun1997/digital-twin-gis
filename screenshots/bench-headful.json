@@ -1,0 +1,267 @@
+{
+  "renderer": "ANGLE (Intel, Intel(R) UHD Graphics (0x0000A788) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+  "rows": [
+    {
+      "label": "基线（无矢量图层）",
+      "count": 0,
+      "fps": 56.0272915162438,
+      "min": 52.63157894736842,
+      "buildMs": 0
+    },
+    {
+      "label": "北京 · 用地分类（面）",
+      "count": 36936,
+      "fps": 44.35252784490742,
+      "min": 52.91005291422445,
+      "buildMs": 0
+    },
+    {
+      "label": "北京 · 道路网（线）",
+      "count": 133973,
+      "fps": 45.23529852796998,
+      "min": 40.816326530612244,
+      "buildMs": 0
+    },
+    {
+      "label": "北京 · POI（点）",
+      "count": 49190,
+      "fps": 56.35348094955216,
+      "min": 52.9100529037956,
+      "buildMs": 0
+    },
+    {
+      "label": "北京 · 全部专题",
+      "count": 220100,
+      "fps": 40.996844485310845,
+      "min": 37.03703703703704,
+      "buildMs": 0
+    },
+    {
+      "label": "广东 · 用地分类（面）",
+      "count": 117798,
+      "fps": 56.09293976860611,
+      "min": 53.19148935959411,
+      "buildMs": 1918.0999999977648
+    },
+    {
+      "label": "广东 · 道路网（线）",
+      "count": 293724,
+      "fps": 30.904196989344545,
+      "min": 27.173913042928096,
+      "buildMs": 0
+    },
+    {
+      "label": "广东 · POI（点）",
+      "count": 150237,
+      "fps": 56.57038901488826,
+      "min": 53.19148935959411,
+      "buildMs": 0
+    },
+    {
+      "label": "广东 · 全部专题",
+      "count": 561781,
+      "fps": 28.060591010677925,
+      "min": 26.246719161644776,
+      "buildMs": 0
+    },
+    {
+      "label": "6 省 · 用地分类（面）",
+      "count": 348981,
+      "fps": 31.75,
+      "min": 29.850746268656717,
+      "buildMs": 3609.9999999962747
+    },
+    {
+      "label": "6 省 · 道路网（线）",
+      "count": 1022827,
+      "fps": 7.160140239989466,
+      "min": 8.833922261251526,
+      "buildMs": 0
+    },
+    {
+      "label": "6 省 · POI（点）",
+      "count": 375168,
+      "fps": 10.382419103649239,
+      "min": 10,
+      "buildMs": 0
+    },
+    {
+      "label": "6 省 · 全部专题",
+      "count": 1747010,
+      "fps": 4.784803464195149,
+      "min": 1.3989927252363705,
+      "buildMs": 0
+    }
+  ],
+  "layers": [
+    {
+      "k": "beijing:landuse",
+      "status": "ready",
+      "count": 36936,
+      "buildMs": 101,
+      "readyMs": 1434
+    },
+    {
+      "k": "beijing:roads",
+      "status": "ready",
+      "count": 133973,
+      "buildMs": 237,
+      "readyMs": 3599
+    },
+    {
+      "k": "beijing:poi",
+      "status": "ready",
+      "count": 49190,
+      "buildMs": 38,
+      "readyMs": 0
+    },
+    {
+      "k": "beijing:boundary",
+      "status": "ready",
+      "count": 1,
+      "buildMs": 3,
+      "readyMs": 0
+    },
+    {
+      "k": "guangdong:landuse",
+      "status": "ready",
+      "count": 117798,
+      "buildMs": 285,
+      "readyMs": 1918
+    },
+    {
+      "k": "guangdong:roads",
+      "status": "ready",
+      "count": 293724,
+      "buildMs": 440,
+      "readyMs": 4839
+    },
+    {
+      "k": "guangdong:poi",
+      "status": "ready",
+      "count": 150237,
+      "buildMs": 114,
+      "readyMs": 0
+    },
+    {
+      "k": "guangdong:boundary",
+      "status": "ready",
+      "count": 22,
+      "buildMs": 1,
+      "readyMs": 0
+    },
+    {
+      "k": "shanghai:landuse",
+      "status": "ready",
+      "count": 26380,
+      "buildMs": 90,
+      "readyMs": 576
+    },
+    {
+      "k": "shanghai:roads",
+      "status": "ready",
+      "count": 155766,
+      "buildMs": 258,
+      "readyMs": 2197
+    },
+    {
+      "k": "shanghai:poi",
+      "status": "ready",
+      "count": 54170,
+      "buildMs": 40,
+      "readyMs": 0
+    },
+    {
+      "k": "shanghai:boundary",
+      "status": "ready",
+      "count": 2,
+      "buildMs": 1,
+      "readyMs": 0
+    },
+    {
+      "k": "chongqing:landuse",
+      "status": "ready",
+      "count": 15295,
+      "buildMs": 45,
+      "readyMs": 281
+    },
+    {
+      "k": "chongqing:roads",
+      "status": "ready",
+      "count": 83973,
+      "buildMs": 170,
+      "readyMs": 2131
+    },
+    {
+      "k": "chongqing:poi",
+      "status": "ready",
+      "count": 15460,
+      "buildMs": 7,
+      "readyMs": 0
+    },
+    {
+      "k": "chongqing:boundary",
+      "status": "ready",
+      "count": 4,
+      "buildMs": 3,
+      "readyMs": 0
+    },
+    {
+      "k": "sichuan:landuse",
+      "status": "ready",
+      "count": 76586,
+      "buildMs": 240,
+      "readyMs": 1082
+    },
+    {
+      "k": "sichuan:roads",
+      "status": "ready",
+      "count": 162749,
+      "buildMs": 324,
+      "readyMs": 4270
+    },
+    {
+      "k": "sichuan:poi",
+      "status": "ready",
+      "count": 30143,
+      "buildMs": 20,
+      "readyMs": 0
+    },
+    {
+      "k": "sichuan:boundary",
+      "status": "ready",
+      "count": 5,
+      "buildMs": 9,
+      "readyMs": 0
+    },
+    {
+      "k": "zhejiang:landuse",
+      "status": "ready",
+      "count": 75986,
+      "buildMs": 203,
+      "readyMs": 1671
+    },
+    {
+      "k": "zhejiang:roads",
+      "status": "ready",
+      "count": 192642,
+      "buildMs": 368,
+      "readyMs": 3063
+    },
+    {
+      "k": "zhejiang:poi",
+      "status": "ready",
+      "count": 75968,
+      "buildMs": 55,
+      "readyMs": 0
+    },
+    {
+      "k": "zhejiang:boundary",
+      "status": "ready",
+      "count": 0,
+      "buildMs": 0,
+      "readyMs": 0
+    }
+  ],
+  "errors": []
+}

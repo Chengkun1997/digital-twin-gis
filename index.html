@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>数字孪生 GIS 基础系统 · 开源数据版</title>
+  <link rel="icon" href="data:," />
+  <link rel="stylesheet" href="/src/styles.css" />
+</head>
+<body>
+<div id="cesiumContainer"></div>
+
+<header id="topbar">
+  <div class="brand">
+    <div class="logo"></div>
+    <div class="brand-text">
+      <h1>数字孪生 GIS 基础系统</h1>
+      <p>Vite + CesiumJS · 开源数据（OSM / ODbL）</p>
+    </div>
+  </div>
+  <div class="hud">
+    <div class="hud-item">
+      <label>已启用图层</label>
+      <b id="hud-layers">0</b>
+    </div>
+    <div class="hud-item accent">
+      <label>已渲染要素</label>
+      <b id="hud-rendered">0</b>
+      <em>/ <span id="hud-total">0</span></em>
+    </div>
+    <div class="hud-item">
+      <label>帧率</label>
+      <b id="hud-fps">–</b>
+      <em>FPS</em>
+    </div>
+    <div class="hud-item">
+      <label>已加载</label>
+      <b id="hud-mem">0.0</b>
+      <em>MB</em>
+    </div>
+  </div>
+</header>
+
+<aside id="panel-left" class="panel">
+  <div class="panel-head">
+    <h2>数据专辑</h2>
+    <span id="album-total" class="sub"></span>
+  </div>
+  <div id="albums" class="panel-body"></div>
+  <div class="panel-foot">
+    <div class="foot-note">
+      要素直接由 OSM 数据在本地构建为三类图元（面 / 线 / 点）渲染，未使用静态图片。
+    </div>
+    <div id="sources" class="sources"></div>
+  </div>
+</aside>
+
+<aside id="panel-right" class="panel">
+  <div class="panel-head">
+    <h2>区域与样式</h2>
+  </div>
+  <div class="panel-body">
+    <section class="block">
+      <h3>按区域筛选 <span class="hint">省 / 直辖市</span></h3>
+      <div id="regions"></div>
+      <div class="block-tip">区域范围来自 OSM 省级行政边界（admin_level=4），勾选后按需加载该省数据。</div>
+    </section>
+
+    <section class="block">
+      <h3>图层透明度</h3>
+      <div id="opacity"></div>
+    </section>
+
+    <section class="block">
+      <h3>图例</h3>
+      <div id="legend"></div>
+    </section>
+  </div>
+</aside>
+
+<div id="basemap-bar">
+  <span class="bar-label">底图</span>
+  <button data-basemap="esri" class="active">卫星影像</button>
+  <button data-basemap="carto">暗色地图</button>
+  <button data-basemap="none">无底图</button>
+</div>
+
+<footer id="statusbar">
+  <div class="src">
+    数据：© OpenStreetMap contributors · ODbL 1.0 ｜ 影像：Esri World Imagery（Esri / Maxar）｜ 暗色底图：CARTO · OSM
+  </div>
+  <div class="actions">
+    <span id="load-state" class="load-state"></span>
+    <button id="btn-bench">性能自检</button>
+    <button id="btn-reset">重置视角</button>
+  </div>
+</footer>
+
+<div id="toast"></div>
+
+<div id="bench-panel" class="hidden">
+  <div class="bench-head">
+    <h3>性能自检结果</h3>
+    <button id="bench-close">×</button>
+  </div>
+  <div class="bench-note" id="bench-note">测试中…（每个场景采集 4 秒）</div>
+  <table id="bench-table">
+    <thead>
+    <tr><th>#</th><th>场景</th><th>要素数</th><th>平均 FPS</th><th>最低 FPS</th><th>构建耗时</th></tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+  <div class="bench-note">说明：FPS 由 requestAnimationFrame / scene.postRender 实测；构建耗时为 Cesium 图元创建到 ready 的耗时。</div>
+</div>
+
+<script type="module" src="/src/main.js"></script>
+</body>
+</html>
