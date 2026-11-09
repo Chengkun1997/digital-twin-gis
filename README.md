@@ -7,17 +7,30 @@
 
 ## 1. 快速开始
 
-> **仓库不包含矢量数据**（`public/data/*.json` 约 148 MB，`.gitignore` 已排除），
-> clone 下来必须先跑 `npm run fetch` + `npm run data` 才会有数据，否则页面会提示找不到 `manifest.json`。
+> **仓库不包含矢量数据**（`public/data/*.json` 约 148 MB，`.gitignore` 已排除）。
+> 推荐用 GitHub Release 上的固定快照数据包一键获取，不需要联网重建。
 
 ```bash
 npm install
-npm run fetch        # 下载 6 个省级 .osm.pbf 到 data/pbf（约 490 MB，需联网，支持断点续传）
-npm run data         # 解析并生成 public/data/*.json + manifest.json（约 148 MB，耗时数分钟）
-npm run dev          # http://localhost:5173
+npm run data:download   # 从 Release 下载数据包（42.6 MB）并解压到 public/data
+npm run dev             # http://localhost:5173
 ```
 
-如果本机已有 `public/data/`，可跳过前两步，直接 `npm install && npm run dev`。
+数据包信息：
+
+| 项 | 值 |
+| --- | --- |
+| Release tag | `data-2026-11-05` |
+| 资产名 | `digital-twin-gis-data-2026-11-05.zip` |
+| 压缩包 / 解压后 | 42.6 MB / 148.2 MB（25 个 JSON） |
+| 数据快照 | OpenStreetMap 2026-11-05（ODbL 1.0） |
+
+脚本行为说明：
+
+- **私有仓库认证**：优先调用 `gh release download`（复用它已登录的凭据）；若 `gh` 不可用或未登录，回退到用 `GH_TOKEN` / `GITHUB_TOKEN` 调 GitHub API 下载资产（会自动处理 302 跳转，跳转后不带 Authorization）；
+- 已有数据时自动跳过，`npm run data:download -- --force` 强制重下；
+- 解压后自动校验：`manifest.json` 可解析、6 个区域的 24 个专题文件齐全、**每个文件的实际要素数与 manifest 声明一致**，任一不通过都会报错退出；
+- 解压用 `adm-zip`（纯 JS），不依赖系统 `unzip` / `tar`，Windows PowerShell 下可直接运行。
 
 生产构建与静态部署：
 
@@ -82,21 +95,23 @@ Vite 使用相对路径 `base: './'`，因此支持部署在子目录下，无�
 | **合计** | — | **1,022,827** | **348,981** | **375,168** | **272** | **1,747,248** | **148.2 MB** |
 
 - 边界列是 OSM `admin_level=4` relation 拼出的环 / 边界段数量，不是要素顶点数；
-- 数据量是前端实际下载的 JSON 字节数（已做坐标压缩与 Douglas-Peucker 简化），不是原始 pbf（原始 6 个 pbf 合计约 400 MB）；
+- 数据量是前端实际下载的 JSON 字节数（已做坐标压缩与 Douglas-Peucker 简化），不是原始 pbf（原始 6 个 pbf 合计约 493 MB）；
 - 道路线覆盖了「全省骨架路网（motorway/trunk/primary/secondary）+ 重点城市范围内的 tertiary 及以下支路」，所以各省道路量差异与 `detailBbox` 覆盖面积直接相关。
 
 数据由 `scripts/build-data.mjs` 从 `.osm.pbf` 离线解析生成，产物在 `public/data/`，属于**本地内置静态文件**，运行时不会请求 Overpass 或其它 OSM 接口。
-这些文件**不在 Git 仓库中**（体积 148 MB，且 `dist/data/` 会再复制一份），需用第 5 节的命令重新生成。
+这些文件**不在 Git 仓库中**（体积 148 MB，且 `dist/data/` 会再复制一份），请用第 5 节的任一方式获取。
 **离线情况下**：矢量专题（面/线/点/省界）、面板计数、区域开关、透明度、图例全部正常，只有 Cesium 的球体渲染与深色背景；底图瓦片（Esri/CARTO）会加载失败，地球显示为纯色底，这不影响矢量数据的展示与交互。切换底图按钮里的「无底图」就是纯矢量模式。
 
-## 5. 数据再生成（可选）
+## 5. 数据获取的两种方式
 
-```bash
-npm run fetch                 # 下载 6 个省级 .osm.pbf 到 data/pbf（约 400 MB，支持断点续传）
-npm run data                  # 解析并生成 public/data/*.json + manifest.json
-```
+| 方式 | 命令 | 耗时 / 体积 | 适用场景 |
+| --- | --- | --- | --- |
+| **A. 下载固定快照（推荐）** | `npm run data:download` | 约 1 分钟 / 下载 42.6 MB | 只想跑起来、拿到与作者完全一致的数据；需要 gh 登录或 GH_TOKEN（私有仓库） |
+| **B. 从 OSM 重新生成** | `npm run fetch` + `npm run data` | 约 10–20 分钟 / 下载约 493 MB pbf | 想换区域、改解析规则、或拿最新 OSM 数据；不依赖本仓库的 Release |
 
-解析规则（脚本内可调）：
+A 与 B 产出的文件结构完全一致（`public/data/manifest.json` + 24 个省级专题 JSON），前端的 `manifest.json` 校验逻辑对两者通用。
+
+B 的解析规则（脚本内可调）：
 
 - 道路：骨架等级（motorway/trunk/primary/secondary）全省保留；tertiary 及以下只保留在各省重点城市 `detailBbox` 内，避免支路把数据量撑爆；
 - 用地：只保留闭合 `landuse` way，按 10 类归并；

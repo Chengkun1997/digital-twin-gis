@@ -10,6 +10,10 @@ data/pbf/
 public/data/*
 !public/data/.gitkeep
 
+# Release 数据包与下载临时目录（可由 npm run data:download 重新获取）
+release-assets/
+.tmp-data-download/
+
 # 日志
 logs/
 *.log
