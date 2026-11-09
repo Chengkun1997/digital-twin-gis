@@ -59,17 +59,18 @@ export function createSunMode({ Cesium, viewer, toast }) {
     lightingFadeOutDistance: viewer.scene.globe.lightingFadeOutDistance,
     lightingFadeInDistance: viewer.scene.globe.lightingFadeInDistance,
     nightFadeInDistance: viewer.scene.globe.nightFadeInDistance,
+    sunShow: viewer.scene.sun.show,
   };
 
   function setLighting(on) {
     const scene = viewer.scene;
     const globe = scene.globe;
     globe.enableLighting = on;
-    globe.dynamicAtmosphereLighting = on;
+    globe.dynamicAtmosphereLighting = true;
     globe.dynamicAtmosphereLightingFromSun = on;
     globe.showGroundAtmosphere = true;
     scene.skyAtmosphere.show = true;
-    scene.sun.show = on;
+    scene.sun.show = on ? true : globeDefaults.sunShow;
 
     if (on) {
       // 高度约 1640 km 以上全量光照，640 km 以下淡出（贴地看城市时地面不会全黑）
