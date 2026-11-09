@@ -110,7 +110,7 @@ if (regionRows.length > 1) {
 
 // 交互：底图切换 + 透明度滑杆 + 图例
 const baseStates = {};
-for (const name of ['none', 'carto', 'esri']) {
+for (const name of ['none', 'carto', 'osm']) {
   await page.click(`[data-basemap="${name}"]`);
   await new Promise((r) => setTimeout(r, 700));
   baseStates[name] = await page.evaluate(() => ({

@@ -81,14 +81,19 @@ export const SOURCES = [
     license: 'ODbL 1.0 · © OpenStreetMap contributors',
   },
   {
-    name: '卫星影像底图',
-    detail: 'Esri World Imagery（无需 key，直接 XYZ 瓦片流式加载）',
-    license: 'Esri / Maxar / Earthstar Geographics 版权，非开放许可，仅作演示底图',
+    name: 'OSM 标准底图',
+    detail: 'OpenStreetMap 官方栅格瓦片（tile.openstreetmap.org），默认底图',
+    license: 'ODbL 1.0 · © OpenStreetMap contributors；官方瓦片由志愿者资助，仅适合低流量演示，高流量请自建或换商业服务',
   },
   {
-    name: '暗色矢量底图',
-    detail: 'CARTO Dark Matter 栅格瓦片（无需 key）',
-    license: '© CARTO · © OpenStreetMap contributors',
+    name: 'CARTO 暗色底图',
+    detail: 'CARTO Dark Matter 栅格瓦片（basemaps.cartocdn.com）',
+    license: '© CARTO · © OpenStreetMap contributors；需遵守 CARTO 服务条款，仅作演示',
+  },
+  {
+    name: '卫星影像（默认关闭）',
+    detail: 'Esri World Imagery（无需 key，仅在用户主动点击时请求）',
+    license: 'Esri / Maxar / Earthstar Geographics 版权，非开放许可，仅限本地/个人演示，公开部署请勿启用',
   },
   {
     name: '地形',

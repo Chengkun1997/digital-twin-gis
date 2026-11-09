@@ -80,14 +80,15 @@
 
 <div id="basemap-bar">
   <span class="bar-label">底图</span>
-  <button data-basemap="esri" class="active">卫星影像</button>
-  <button data-basemap="carto">暗色地图</button>
+  <button data-basemap="osm" class="active">OSM 标准地图</button>
+  <button data-basemap="carto">CARTO 暗色</button>
   <button data-basemap="none">无底图</button>
+  <button data-basemap="esri" class="warn" title="Esri World Imagery 非开放许可，仅限本地/个人演示；公开部署请勿启用">卫星影像（仅本地演示）</button>
 </div>
 
 <footer id="statusbar">
   <div class="src">
-    数据：© OpenStreetMap contributors · ODbL 1.0 ｜ 影像：Esri World Imagery（Esri / Maxar）｜ 暗色底图：CARTO · OSM
+    数据：© OpenStreetMap contributors · ODbL 1.0 ｜ 默认底图：OSM 标准地图 · ODbL ｜ CARTO 暗色：© CARTO · OSM ｜ 卫星影像默认关闭（非开放许可，仅本地演示）
   </div>
   <div class="actions">
     <span id="load-state" class="load-state"></span>

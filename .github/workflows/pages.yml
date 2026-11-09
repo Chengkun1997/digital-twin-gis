@@ -1,0 +1,61 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [master]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: 安装依赖
+        run: npm ci
+
+      # 矢量数据不在仓库里，从本仓库 Release 下载固定快照（148 MB 解压后）
+      - name: 下载数据快照
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: npm run data:download
+
+      - name: 构建
+        run: npm run build
+
+      - name: 检查 Cesium 静态资源
+        run: |
+          test -d dist/cesium/Workers || (echo '缺失 Cesium Workers' && exit 1)
+          test -d dist/cesium/Assets || (echo '缺失 Cesium Assets' && exit 1)
+          test -f dist/data/manifest.json || (echo '缺失数据 manifest' && exit 1)
+          du -sh dist
+
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

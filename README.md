@@ -3,6 +3,9 @@
 参照《数字孪生技术已经不是门槛-2小时建站过程》的形态，用 **Vite + CesiumJS + OpenStreetMap 开源数据** 复现一套可运行的
 数字孪生 GIS 基础系统。原文中的 LCC Web SDK 属于自研封装、公开渠道无法获取，本项目使用 CesiumJS 原生能力实现等价能力。
 
+- 在线演示：https://chengkun1997.github.io/digital-twin-gis/
+- 源码：https://github.com/Chengkun1997/digital-twin-gis
+
 ![总览](screenshots/04-gpu.png)
 
 ## 1. 快速开始
@@ -45,6 +48,21 @@ Vite 使用相对路径 `base: './'`，因此支持部署在子目录下，无�
 构建产物实测约 **160 MB**：`data/` 148 MB（矢量数据）+ `cesium/` 约 11 MB（Cesium Workers/Assets/Widgets）+ `assets/` 约 5 MB（Cesium 主包 4.9 MB，gzip 后 1.35 MB）。
 注意 `main.js` 使用了顶层 `await`，`vite.config.js` 里已把 `build.target` 设为 `esnext`（否则默认 es2020 目标会报错）。
 
+### 部署到 GitHub Pages
+
+采用 **GitHub Actions 构建并发布**（工作流 `.github/workflows/pages.yml`），而不是本地构建后推 `gh-pages` 分支：
+
+- 数据不进仓库也不进分支历史，CI 里用仓库自带的 `GITHUB_TOKEN` 执行 `npm run data:download`，从本仓库 Release 拉取 42.6 MB 数据包；
+- 构建与发布都在 Actions 内完成，`gh-pages` 分支不需要存在，也不会让仓库多出 160 MB/次的构建历史；
+- 站点地址：`https://chengkun1997.github.io/digital-twin-gis/`。
+
+子路径部署要点（已实测）：Vite `base: './'` + `window.CESIUM_BASE_URL = import.meta.env.BASE_URL + 'cesium/'`
+（即 `./cesium/`），两者都以文档 URL 为基准解析，因此在 `/digital-twin-gis/` 子路径下
+Cesium 的 `Workers/`、`Assets/`、`Widgets/` 与 `data/*.json` 都能正确命中，不走 404。
+
+GitHub Pages 限制（与本项目对照）：单个发布站点 ≤ 1 GB、单文件 ≤ 100 MB。本项目 `dist/` 共 159.7 MB，
+最大单文件 `guangdong-landuse.json` 18.7 MB，均在限制内。
+
 
 ## 2. 功能对照
 
@@ -56,7 +74,7 @@ Vite 使用相对路径 `base: './'`，因此支持部署在子目录下，无�
 | 面状专题 | ✅ | OSM `landuse` 面，按 10 类用地分色填充 + 图例 |
 | 线状专题（十万级） | ✅ | OSM `highway` 线，按 6 级道路分色，全量 102.3 万条 |
 | 点状专题（十万级以上） | ✅ | OSM 带标签 POI，按 12 类分色，全量 37.5 万点 |
-| 卫星影像底图 + 瓦片流式加载 | ✅ | Esri World Imagery（XYZ 瓦片，调用不需要 API key），另附 CARTO 暗色底图、无底图。**免 key ≠ 免费商用**，见第 3 节 |
+| 底图 + 瓦片流式加载 | ✅ | 默认 OSM 标准地图（ODbL）；可切 CARTO 暗色、无底图；Esri 卫星影像默认关闭、仅本地演示。详见第 3 节 |
 | 三维地球旋转/缩放/切底图 | ✅ | Cesium 原生相机 + 底图切换 |
 
 > 说明：本项目没有引入 3D Tiles / 倾斜摄影 / 建筑白模，原文也未要求；所有要素都是真实矢量图元，不是静态图片。
@@ -67,8 +85,9 @@ Vite 使用相对路径 `base: './'`，因此支持部署在子目录下，无�
 | --- | --- | --- |
 | 道路、用地、POI、行政边界 | OpenStreetMap 省级提取：`download.openstreetmap.fr/extracts/asia/china/`（2026-11-05 快照） | **ODbL 1.0**，© OpenStreetMap contributors |
 | 省级边界 | 同一份 OSM 数据中的 `boundary=administrative` + `admin_level=4` 关系，按共享节点拼接 | ODbL 1.0 |
-| 卫星影像 | Esri World Imagery（`server.arcgisonline.com/.../World_Imagery/MapServer`） | Esri / Maxar / Earthstar Geographics，**非开放许可**，仅作演示底图 |
-| 暗色底图 | CARTO Dark Matter（`basemaps.cartocdn.com`） | © CARTO · © OpenStreetMap contributors |
+| **默认底图** | OSM 标准地图（`tile.openstreetmap.org`） | ODbL 1.0，© OpenStreetMap contributors；官方瓦片仅适合低流量演示，见下方说明 |
+| 可选底图 | CARTO Dark Matter（`basemaps.cartocdn.com`） | © CARTO · © OpenStreetMap contributors |
+| 卫星影像（**默认关闭**） | Esri World Imagery（`server.arcgisonline.com`） | Esri / Maxar / Earthstar Geographics，**非开放许可**，仅限本地/个人演示 |
 | 地形 | Cesium 默认椭球（未使用 Cesium ion 地形，因为需要 key） | — |
 
 界面左下角「数据来源」面板中对每一项都有署名与协议说明；底图版权同时显示在 Cesium credit 中。
@@ -77,9 +96,13 @@ Vite 使用相对路径 `base: './'`，因此支持部署在子目录下，无�
 
 - 矢量数据（道路/用地/POI/省界）来自 OSM，受 **ODbL 1.0** 保护，可自由使用、修改、再分发，
   但再分发衍生数据库必须同样以 ODbL 提供，并署名 `© OpenStreetMap contributors`；
-- **Esri World Imagery 不是开源/开放许可**。它只是「调用时不需要填 API key」，不代表可以免费商用；
-  本项目仅把它作为**本地演示底图**。若要对外提供服务或商业使用，请自行替换为天地图（需 key）、
-  自建影像瓦片或其它已获授权的影像服务；切换到「无底图」即为纯矢量模式。
+- **默认底图 OSM 官方瓦片**：按 [OSM 瓦片使用政策](https://operations.osmfoundation.org/policies/tiles/)
+  属于「非重负载」使用（带 Referer 的浏览器直连、正确署名、不批量爬取）。它由志愿者捐助，**不适合高流量或商业服务**；
+  若要正式对外提供服务，请自建瓦片或换用有 SLA 的商业瓦片服务；
+- **CARTO 底图**：`basemaps.cartocdn.com` 由 CARTO 免费提供用于展示，需遵守其服务条款并保留署名；同样不建议作为高流量生产底图；
+- **Esri World Imagery 不是开源/开放许可**。它只是「调用时不需要填 API key」，不代表可以免费商用。
+  代码中该底图**默认不创建、不发起任何请求**，只有用户在界面上主动点击「⚠ 卫星影像（仅本地演示）」才会按需加载，
+  并弹出提示。公开部署**请勿启用**；需要影像请自行替换为天地图（需 key）、自建影像瓦片或其它已获授权的服务；
 - 本项目代码采用 **MIT**，详见 [LICENSE](LICENSE)；MIT 不覆盖上述第三方数据与底图服务。
 
 ## 4. 数据规模（真实统计）
@@ -100,7 +123,7 @@ Vite 使用相对路径 `base: './'`，因此支持部署在子目录下，无�
 
 数据由 `scripts/build-data.mjs` 从 `.osm.pbf` 离线解析生成，产物在 `public/data/`，属于**本地内置静态文件**，运行时不会请求 Overpass 或其它 OSM 接口。
 这些文件**不在 Git 仓库中**（体积 148 MB，且 `dist/data/` 会再复制一份），请用第 5 节的任一方式获取。
-**离线情况下**：矢量专题（面/线/点/省界）、面板计数、区域开关、透明度、图例全部正常，只有 Cesium 的球体渲染与深色背景；底图瓦片（Esri/CARTO）会加载失败，地球显示为纯色底，这不影响矢量数据的展示与交互。切换底图按钮里的「无底图」就是纯矢量模式。
+**离线情况下**：矢量专题（面/线/点/省界）、面板计数、区域开关、透明度、图例全部正常，只有 Cesium 的球体渲染与深色背景；底图瓦片（OSM/CARTO）会加载失败，地球显示为纯色底，这不影响矢量数据的展示与交互。切换底图按钮里的「无底图」就是纯矢量模式。
 
 ## 5. 数据获取的两种方式
 
@@ -177,11 +200,12 @@ FPS 由 `requestAnimationFrame` 帧间隔统计，最低 FPS 取 P95 帧间隔�
 
 1. 区域筛选是 **6 个省级区域**（4 直辖市 + 2 省），不是全国 34 个省级行政区；市/县两级未做。
 2. 省界由 OSM relation 拼接，个别省（浙江）因边界 way 不闭合退化为「分段线」渲染，仍是真实边界数据，但不是单环。
-3. 底图卫星影像是 Esri 的公开服务，**不是开放许可**，商用需自行替换（可换天地图/自建影像，需 key）；
-   OSM 官方栅格瓦片在本机网络不可达，因此暗色底图改用 CARTO。
+3. 卫星影像（Esri World Imagery）**不是开放许可**，代码里默认不加载、不发起请求，仅作本地演示；
+   公开部署使用开放授权的 OSM 标准地图 + CARTO 暗色。正式对外服务请自建瓦片或换用有授权的影像服务。
 4. 未使用 Cesium ion：无全球地形、无 ion 影像；地形为椭球面，山区没有高程起伏。
 5. 未实现 POI 点击拾取/属性查询、空间查询、路径分析等业务功能。
 6. 大数据量下首次加载有明显构建耗时（几十万图元的主线程构建 + Cesium 异步合批），详见性能表。
+7. 全量 174.7 万要素同时开启时只有约 4.8 FPS，**基本不可交互**，实际使用建议按单省开关。
 
 ## 9. 目录结构
 
