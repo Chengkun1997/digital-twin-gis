@@ -554,3 +554,120 @@ html, body {
   #panel-right { display: none; }
   .hud-item:nth-child(4) { display: none; }
 }
+
+/* ------------------------------------------------------------ 日照模式 */
+.sun-panel {
+  position: absolute;
+  left: 376px;
+  top: 84px;
+  width: 286px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  box-shadow: 0 18px 48px rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(10px);
+  z-index: 22;
+  overflow: hidden;
+}
+
+.sun-head {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 10px 14px;
+  background: var(--panel-strong);
+  border-bottom: 1px solid var(--border-soft);
+}
+.sun-head h3 { font-size: 13px; font-weight: 600; letter-spacing: 0.02em; }
+
+.sun-body { padding: 12px 14px 14px; }
+.sun-body.off { opacity: 0.55; }
+
+.sun-row {
+  display: flex; align-items: baseline; gap: 8px;
+  margin-bottom: 6px;
+  font-size: 11px;
+  color: var(--text-mute);
+}
+.sun-row b {
+  font-family: var(--mono);
+  font-size: 13px;
+  color: var(--accent);
+  font-weight: 600;
+}
+.sun-row .sub { margin-left: auto; font-size: 10px; color: var(--text-mute); font-family: var(--mono); }
+
+.sun-panel input[type='range'] {
+  width: 100%;
+  margin: 0 0 10px;
+  height: 4px;
+  -webkit-appearance: none;
+  appearance: none;
+  border-radius: 3px;
+  background: linear-gradient(90deg, rgba(53, 214, 194, 0.45), rgba(96, 165, 250, 0.25));
+  outline: none;
+  cursor: pointer;
+}
+.sun-panel input[type='range']::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 13px; height: 13px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 8px rgba(53, 214, 194, 0.7);
+  border: none;
+}
+
+.sun-actions {
+  display: flex; align-items: center; gap: 8px;
+  margin: 2px 0 10px;
+}
+.sun-actions button, .sun-actions select {
+  height: 26px;
+  padding: 0 10px;
+  font-size: 11px;
+  color: var(--text);
+  background: rgba(148, 163, 184, 0.1);
+  border: 1px solid var(--border-soft);
+  border-radius: 7px;
+  cursor: pointer;
+}
+.sun-actions button:hover, .sun-actions select:hover { border-color: var(--border); }
+.sun-actions button.playing { color: #062a2c; background: var(--accent); font-weight: 600; }
+.sun-actions select { padding: 0 4px; }
+
+.sun-check {
+  display: flex; align-items: center; gap: 6px;
+  font-size: 11px; color: var(--text-dim);
+  cursor: pointer;
+}
+.sun-check input { accent-color: #35d6c2; }
+
+.sun-tip { margin-top: 8px; font-size: 10px; color: var(--text-mute); line-height: 1.6; }
+.sun-season {
+  margin-top: 8px; padding-top: 8px;
+  border-top: 1px solid var(--border-soft);
+  font-size: 10px; color: var(--text-mute); line-height: 1.7;
+  font-family: var(--mono);
+}
+
+.sun-info .kv {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 11px; color: var(--text-mute);
+  padding: 2px 0;
+}
+.sun-info .kv b { margin-left: auto; font-family: var(--mono); font-size: 12px; color: var(--text); }
+.sun-info .kv .sub { font-size: 10px; color: var(--text-mute); font-family: var(--mono); }
+.sun-info .mini {
+  height: 20px; padding: 0 6px;
+  font-size: 10px; color: var(--text-dim);
+  background: rgba(148, 163, 184, 0.12);
+  border: 1px solid var(--border-soft);
+  border-radius: 6px;
+  cursor: pointer;
+}
+.sun-info .mini:hover { color: var(--text); border-color: var(--border); }
+
+@media (max-width: 1500px) {
+  .sun-panel { left: 376px; width: 250px; }
+}
+@media (max-width: 1180px) {
+  .sun-panel { display: none; }
+}

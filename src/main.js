@@ -6,6 +6,7 @@ import {
   buildPolygonLayer, buildLineLayer, buildPointLayer, buildBoundaryLayer,
   cacheInstanceAttributes, applyLayerOpacity,
 } from './layers.js';
+import { createSunMode } from './sun-mode.js';
 
 // ---------------------------------------------------------------- 基础格式化
 const fmtNum = (n) => (n >= 10000 ? `${(n / 10000).toFixed(1)} 万` : String(n));
@@ -473,6 +474,9 @@ document.querySelectorAll('#basemap-bar button').forEach((btn) => {
   });
 });
 
+// ---------------------------------------------------------------- 日照模式
+const sunMode = createSunMode({ Cesium, viewer, toast });
+
 // ---------------------------------------------------------------- 性能自检
 const bench = { rows: [], running: false };
 
@@ -657,4 +661,4 @@ boot().catch((e) => {
   toast('初始化失败：' + e.message, 5000);
 });
 
-window.__gis = { viewer, state, Cesium, runBenchmark, ensureRegion, setCameraBeijing };
+window.__gis = { viewer, state, Cesium, runBenchmark, ensureRegion, setCameraBeijing, sunMode };

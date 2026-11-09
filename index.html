@@ -55,11 +55,57 @@
   </div>
 </aside>
 
+<section id="sun-panel" class="sun-panel">
+  <div class="sun-head">
+    <h3>日照模式</h3>
+    <div class="switch" id="sun-switch" title="开启/关闭日照与晨昏线"></div>
+  </div>
+  <div class="sun-body">
+    <div class="sun-row">
+      <label>日期</label>
+      <b id="sun-day-label">—</b>
+    </div>
+    <input type="range" id="sun-day" min="1" max="365" step="1" value="1" />
+    <div class="sun-row">
+      <label>时刻</label>
+      <b id="sun-time-label">—</b>
+      <span class="sub" id="sun-utc-label"></span>
+    </div>
+    <input type="range" id="sun-minute" min="0" max="1439" step="1" value="0" />
+    <div class="sun-actions">
+      <button id="sun-play">▶ 播放</button>
+      <select id="sun-speed" title="播放速度">
+        <option value="10">10 分/秒</option>
+        <option value="30" selected>30 分/秒</option>
+        <option value="60">60 分/秒</option>
+        <option value="240">240 分/秒</option>
+      </select>
+      <button id="sun-now">现在</button>
+    </div>
+    <label class="sun-check"><input type="checkbox" id="sun-terminator" checked /> 显示晨昏线</label>
+    <div class="sun-tip">拖动日期与时刻，观察晨昏线与昼夜分界移动。</div>
+    <div id="sun-season" class="sun-season"></div>
+  </div>
+</section>
+
 <aside id="panel-right" class="panel">
   <div class="panel-head">
     <h2>区域与样式</h2>
   </div>
   <div class="panel-body">
+    <section class="block sun-info">
+      <h3>太阳与时刻 <span class="hint" id="sun-place-name">北京</span></h3>
+      <div class="kv"><span>位置</span><b id="sun-coord">—</b><button id="sun-follow" class="mini">用视图中心</button></div>
+      <div class="kv"><span>日期</span><b id="sun-date2">—</b></div>
+      <div class="kv"><span>北京时间</span><b id="sun-bj">—</b><span class="sub">UTC+8</span></div>
+      <div class="kv"><span>UTC</span><b id="sun-utc">—</b></div>
+      <div class="kv"><span>直射点</span><b id="sun-sub">—</b></div>
+      <div class="kv"><span>太阳高度角</span><b id="sun-alt">—</b></div>
+      <div class="kv"><span>日出 / 日落</span><b id="sun-riseset">—</b></div>
+      <div class="kv"><span>昼长</span><b id="sun-daylen">—</b></div>
+      <div class="block-tip">日出日落按 NOAA 太阳位置算法（高度 -0.833°，含大气折射）计算；时刻均为 UTC+8。</div>
+    </section>
+
     <section class="block">
       <h3>按区域筛选 <span class="hint">省 / 直辖市</span></h3>
       <div id="regions"></div>
