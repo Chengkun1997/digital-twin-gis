@@ -22,16 +22,33 @@ function toast(msg, ms = 2200) {
 }
 
 // ---------------------------------------------------------------- 三维场景
-const esri = new Cesium.UrlTemplateImageryProvider({
-  url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
-  maximumLevel: 18,
-  credit: new Cesium.Credit('Esri, Maxar, Earthstar Geographics', false),
+// 默认底图：OpenStreetMap 官方栅格瓦片（ODbL，署名 © OpenStreetMap contributors）。
+// 官方瓦片由志愿者资助，仅适合低流量演示；高流量请自建瓦片或换用商业服务。
+const osm = new Cesium.UrlTemplateImageryProvider({
+  url: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+  maximumLevel: 19,
+  credit: new Cesium.Credit('© OpenStreetMap contributors', false),
 });
 const carto = new Cesium.UrlTemplateImageryProvider({
   url: 'https://basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png',
   maximumLevel: 19,
   credit: new Cesium.Credit('© CARTO · © OpenStreetMap contributors', false),
 });
+
+/**
+ * Esri World Imagery 不是开放许可，只在用户主动点击时按需创建，
+ * 公开部署默认从不发起请求。
+ */
+let esriLayer = null;
+function ensureEsriLayer() {
+  if (esriLayer) return esriLayer;
+  esriLayer = viewer.imageryLayers.addImageryProvider(new Cesium.UrlTemplateImageryProvider({
+    url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+    maximumLevel: 18,
+    credit: new Cesium.Credit('Esri, Maxar, Earthstar Geographics', false),
+  }));
+  return esriLayer;
+}
 
 const viewer = new Cesium.Viewer('cesiumContainer', {
   baseLayer: false,
@@ -54,7 +71,7 @@ viewer.scene.globe.showGroundAtmosphere = true;
 viewer.scene.fog.enabled = false;
 viewer.scene.globe.enableLighting = false;
 
-const esriLayer = viewer.imageryLayers.addImageryProvider(esri);
+const osmLayer = viewer.imageryLayers.addImageryProvider(osm);
 const cartoLayer = viewer.imageryLayers.addImageryProvider(carto);
 cartoLayer.show = false;
 
@@ -440,8 +457,14 @@ document.querySelectorAll('#basemap-bar button').forEach((btn) => {
   btn.addEventListener('click', () => {
     document.querySelectorAll('#basemap-bar button').forEach((b) => b.classList.toggle('active', b === btn));
     const mode = btn.dataset.basemap;
-    esriLayer.show = mode === 'esri';
+    osmLayer.show = mode === 'osm';
     cartoLayer.show = mode === 'carto';
+    if (mode === 'esri') {
+      ensureEsriLayer().show = true;
+      toast('Esri 影像为非开放许可，仅限本地/个人演示，请勿用于公开部署');
+    } else if (esriLayer) {
+      esriLayer.show = false;
+    }
     viewer.scene.globe.baseColor = new Cesium.Color(0.035, 0.055, 0.08, 1);
     if (mode === 'none') {
       viewer.scene.globe.baseColor = new Cesium.Color(0.045, 0.075, 0.085, 1);

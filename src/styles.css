@@ -436,6 +436,9 @@ html, body {
 }
 #basemap-bar button:hover { color: var(--text); background: rgba(148, 163, 184, 0.1); }
 #basemap-bar button.active { color: #062a2c; background: var(--accent); font-weight: 600; }
+#basemap-bar button.warn { color: #d8a657; }
+#basemap-bar button.warn::before { content: '⚠ '; }
+#basemap-bar button.warn.active { color: #2b1c00; background: #d8a657; }
 
 /* 底部状态栏 */
 #statusbar {
